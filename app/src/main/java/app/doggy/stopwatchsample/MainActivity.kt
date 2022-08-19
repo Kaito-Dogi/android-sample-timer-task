@@ -18,7 +18,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
+
+    // タイマーの変数
     private var timer: Timer? = null
+
+    // 秒数を数え上げるための変数（ミリ秒）
     private var count: Long = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,14 +30,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // スタートボタンの処理
         binding.startButton.setOnClickListener {
-            timer?.cancel()
-
+            // タイマーをスタート
             timer = Timer()
             val timerTask = CountUpTimerTask()
-
             timer?.schedule(timerTask, delay, period)
+
+            // カウントをリセット
             count = 0
+
+            // timer_text の表示をリセット
             binding.timerText.text = convertTimerText(0, 0, 0)
 
             // ボタンを押せるかどうかを変更
@@ -41,7 +48,9 @@ class MainActivity : AppCompatActivity() {
             binding.stopButton.isEnabled = true
         }
 
+        // ストップボタンの処理
         binding.stopButton.setOnClickListener {
+            // タイマーをキャンセル
             timer?.cancel()
             timer = null
 
@@ -51,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // タイマーの具体的な処理の実装
     private inner class CountUpTimerTask : TimerTask() {
         override fun run() {
             val handler = Handler(Looper.getMainLooper())
@@ -64,6 +74,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Long型（整数）の値を、 timer_text に表示するための文字列に変換する処理
     private fun convertTimerText(mm: Long, ss: Long, ms: Long) =
         String.format(Locale.JAPAN, format, mm, ss, ms)
 }
