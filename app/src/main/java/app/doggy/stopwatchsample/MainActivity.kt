@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val delay: Long = 0L
         private const val period: Long = 100L
+        private const val format = "%1$02d:%2$02d.%3$01d"
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
             timer?.schedule(timerTask, delay, period)
             count = 0
-            binding.timerText.text = "00:00.0"
+            binding.timerText.text = convertTimerText(0, 0, 0)
 
             // ボタンを押せるかどうかを変更
             binding.startButton.isEnabled = false
@@ -58,9 +59,11 @@ class MainActivity : AppCompatActivity() {
                 val mm: Long = count * 100 / 1000 / 60
                 val ss: Long = count * 100 / 1000 % 60
                 val ms: Long = (count * 100 - ss * 1000 - mm * 1000 * 60) / 100
-                binding.timerText.text =
-                    String.format(Locale.JAPAN, "%1$02d:%2$02d.%3$01d", mm, ss, ms)
+                binding.timerText.text = convertTimerText(mm, ss, ms)
             }
         }
     }
+
+    private fun convertTimerText(mm: Long, ss: Long, ms: Long) =
+        String.format(Locale.JAPAN, format, mm, ss, ms)
 }
